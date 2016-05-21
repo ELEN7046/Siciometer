@@ -1,0 +1,50 @@
+--------------------------------------VIEW ----------------------------------------
+SELECT        CASE WHEN HighestLevelOfEducation IN ('No schooling') THEN 'No schooling' WHEN HighestLevelOfEducation IN ('Grade R/0', 'Grade 1/ Sub A/Class 1', 'Grade 2 / Sub B/Class 2', 
+                         'Grade 3/Standard 1/ ABET 1(Kha Ri Gude - Sanli)', 'Grade 4/ Standard 2', 'Grade 5/ Standard 3/ ABET 2', 'Grade 6/Standard 4') 
+                         THEN 'Some primary education' WHEN HighestLevelOfEducation IN ('Grade 7/Standard 5/ ABET 3') THEN 'Primary education finished' WHEN HighestLevelOfEducation IN ('Grade 8/Standard 6/Form 1', 
+                         'Grade 9/Standard 7/Form 2/ ABET 4', 'Grade 10/ Standard 8/ Form 3', 'Grade 11/ Standard 9/ Form 4', 'Certificate with less than Grade 12/Std 10', 'Diploma with less than Grade 12/Std 10') 
+                         THEN 'Some Secondary Education' WHEN HighestLevelOfEducation IN ('Grade 12/Standard 10/Form 5/Matric (Exemption *)', 'Certificate with Grade 12/Std 10', 'Diploma with Grade 12/Std 10', 
+                         'Grade 12/Standard 10/Form 5/Matric (No Exemption)') THEN 'Secondary Education Finished' WHEN HighestLevelOfEducation IN ('Bachelors Degree', 'Bachelors Degree and post-graduate diploma', 
+                         'Higher degree (Masters, Doctorate)', 'Higher Diploma (Technikon/University of Technology)', 'Honours Degree', 'N4/NTC 4', 'N5/NTC 5 19', 'N6/NTC 6', 'NTC 1/ N1/NC (V) Level 2', 'NTC 2/ N2/ NC (V) Level 3', 
+                         'NTC 3/ N3/NC (V)/Level 4', 'Post Higher Diploma (Technikon/University of Technology Masters, Doctoral)') THEN 'Tertiary Education' ELSE 'NOT Found' END AS LevelOfEducation, ProvinceId, 
+                         DistrictMunicipalityId, LocalMunicipalityId, SiteId, Province, District, LocalMunicipality, SiteName, YEAR(CaptureDate) AS Year, NeedEducationServiceECD, NeedEducationServiceFeeding, 
+                         NeedEducationServiceFees, NeedEducationServiceUniform, NeedEducationServiceABET, NeedEducationServiceCareerGuidance, NeedEducationServiceReAdmission, NeedEducationServiceAdmission, 
+                         NeedEducationServiceBursaries, NeedEducationServiceSpecialNeeds, NeedEducationServiceScholarTransport, NeedEducationServiceVocSkills, NeedEducationServiceTextbooks, NeedEducationServiceOther, 
+                         NeedEducationServiceDontKnow, NeedEducationServiceNone, WalksToSchool, AttendingSchool, NeedEducationServiceNotSelected, TimeToWalkToSchool, NeedEducationServiceTransportation, 
+                         EducationalInstitutions, YEAR(CaptureDate) AS Expr1
+FROM            dbo.Wop_Vw_v2011Extract_HouseholdMemberSelectionsAndNeeds
+
+
+----------------------------Queries for data retrieval ------------------------
+
+select * --Province,District,LocalMunicipality,LevelOfEducation 
+from [dbo].[vw_rpt_Social_LvevelOfEdcation]
+where Province = 'Free State'
+--and LocalMunicipality = 'Mafube'
+and LocalMunicipalityId = 1069
+and DistrictMunicipalityId = 2013
+
+group by Province, District,LocalMunicipality,LevelOfEducation
+
+select Province,LevelOfEducation, count(*) as TotalLevelOfEducation
+from [dbo].[tbl_7046LevelOfEducationHavesNeeds]
+group by Province,LevelOfEducation --, LocalMunicipality,District,LevelOfEducation
+order by 1,2,3
+
+select CaptureYear,Province,EducationalInstitutions, count(EducationalInstitutions) as TotalInstitutions
+from [dbo].[tbl_7046LevelOfEducationHavesNeeds]
+where CaptureYear > 2012
+group by CaptureYear,Province,EducationalInstitutions --, LocalMunicipality,District,LevelOfEducation
+order by 1,2,3,4
+
+select CaptureYear,Province,District,LocalMunicipality, TimeToWalkToSchool, count(TimeToWalkToSchool) as TotalWalksToSchool
+from [dbo].[tbl_7046LevelOfEducationHavesNeeds]
+where CaptureYear > 2012
+group by CaptureYear,Province,District,LocalMunicipality,TimeToWalkToSchool --, LocalMunicipality,District,LevelOfEducation
+order by 1,2,3,4
+
+select CaptureYear,Province,District,LocalMunicipality, LevelOfEducation, count(LevelOfEducation) as TotalLevelOfEducation
+from [dbo].[tbl_7046LevelOfEducationHavesNeeds]
+--where CaptureYear > 2012
+group by CaptureYear,Province,District,LocalMunicipality,LevelOfEducation --, LocalMunicipality,District,LevelOfEducation
+order by 1,2,3,4
