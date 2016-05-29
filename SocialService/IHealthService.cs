@@ -14,6 +14,7 @@ namespace SocialService
     public interface IHealthService
     {
 
+
         [OperationContract]
         //void DoWork();
         [WebInvoke(Method = "GET",
