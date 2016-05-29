@@ -100,7 +100,7 @@ namespace SocialService
                 var json = jsonSerialiser.Serialize(healthprofiles);
 
                 //string result = Newtonsoft.Json.JsonConvert.SerializeObject(healthprofiles, Newtonsoft.Json.Formatting.None);
-                
+                Console.Write(json);
                 return healthprofiles;
             }
         }
